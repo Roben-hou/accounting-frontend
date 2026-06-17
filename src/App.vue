@@ -37,10 +37,12 @@ const stats = ref<stat>({ income: 0, expense: 0 });
 const handleSubmit = async () => {
   await createRecord(form.value);
   records.value = await getRecords();
+  stats.value = await getStats();
 };
 const handleDelete = async (id: number) => {
   await deleteRecord(id);
   records.value = await getRecords();
+  stats.value = await getStats();
 };
 
 onMounted(async () => {
