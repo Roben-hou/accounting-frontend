@@ -3,6 +3,10 @@
     {{ item.title }}-{{ item.amount }}-{{ item.type }}-{{ item.category }}
     <button @click="handleDelete(item.id)">删除</button>
   </div>
+  <div>
+    <span>总收入: {{ stats.income }}</span>
+    <span>总支出: {{ stats.expense }}</span>
+  </div>
   <form>
     <input type="text" v-model="form.title" />
     <input type="number" v-model="form.amount" />
@@ -17,8 +21,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import type { Record } from "@/types";
-import { getRecords, createRecord, deleteRecord } from "@/api";
+import type { Record, stat } from "@/types";
+import { getRecords, createRecord, deleteRecord, getStats } from "@/api";
 
 const records = ref<Record[]>([]);
 const form = ref<Omit<Record, "id" | "created_at">>({
@@ -27,6 +31,8 @@ const form = ref<Omit<Record, "id" | "created_at">>({
   type: "income" as "income" | "expense",
   category: "",
 });
+
+const stats = ref<stat>({ income: 0, expense: 0 });
 
 const handleSubmit = async () => {
   await createRecord(form.value);
@@ -39,5 +45,6 @@ const handleDelete = async (id: number) => {
 
 onMounted(async () => {
   records.value = await getRecords();
+  stats.value = await getStats();
 });
 </script>

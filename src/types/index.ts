@@ -12,3 +12,7 @@ export interface ApiResponse<T> {
   message: string
   data: T
 }
+export interface stat {
+  income: number
+  expense: number
+}

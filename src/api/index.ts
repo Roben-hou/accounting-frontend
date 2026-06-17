@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import type { Record } from "@/types";
+import type { Record, stat } from "@/types";
 
 export function getRecords():Promise<Record[]> {
   return request.get('/records')
@@ -9,4 +9,7 @@ export function createRecord(data: Omit<Record,'id' | 'created_at'>) {
 }
 export function deleteRecord(id: number) {
   return request.delete(`/records/${id}`)
+}
+export function getStats(): Promise<stat> {
+  return request.get('/records/stats')
 }
