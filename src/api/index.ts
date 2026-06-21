@@ -13,3 +13,9 @@ export function deleteRecord(id: number) {
 export function getStats(): Promise<stat> {
   return request.get('/records/stats')
 }
+export function login(data: {username:string,password:string}):Promise<{token:string}> {
+  return request.post('/auth/login', data)
+}
+export function register(data: {username:string,password:string}):Promise<{token:string}> {
+  return request.post('/auth/register', data)
+}

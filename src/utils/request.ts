@@ -5,6 +5,14 @@ const request = axios.create({
   timeout: 5000,
 })
 
+request.interceptors.request.use(config => {
+  const token = localStorage.getItem('token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+
 request.interceptors.response.use(response => {
   const { data } = response
   if (data.code == 200) {
