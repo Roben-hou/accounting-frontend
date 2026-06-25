@@ -97,3 +97,13 @@ onMounted(async () => {
   stats.value = await getStats();
 });
 </script>
+<style scoped lang="scss">
+$primary: #1976d2;
+
+.stats-card {
+  border-radius: 12px;
+  &:hover {
+    opacity: 0.9;
+  }
+}
+</style>

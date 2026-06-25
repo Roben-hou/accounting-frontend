@@ -3,8 +3,8 @@
     <v-card-text>
       <v-text-field v-model="form.username" label="用户名"></v-text-field>
       <v-text-field v-model="form.password" label="密码" type="password"></v-text-field>
-      <v-btn color="primary" block @click="handleLogin">登录</v-btn>
-      <v-btn variant="text" block @click="router.push('/auth/register')">没有账号？去注册</v-btn>
+      <v-btn color="primary" block @click="handleRegister">注册</v-btn>
+      <v-btn variant="text" block @click="router.push('/auth/login')">已有账号?去登录</v-btn>
     </v-card-text>
   </v-card>
 </template>
@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { login } from "@/api";
+import { register } from "@/api";
 
 const router = useRouter();
 const form = ref({
@@ -20,10 +20,9 @@ const form = ref({
   password: "",
 });
 
-const handleLogin = async () => {
-  const res = await login(form.value);
-  localStorage.setItem("token", res.token);
-  router.push("/records");
+const handleRegister = async () => {
+  await register(form.value);
+  router.push("/auth/login");
 };
 </script>
 
