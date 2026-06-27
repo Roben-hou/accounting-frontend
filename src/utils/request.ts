@@ -1,4 +1,6 @@
 import axios from 'axios'
+import { userAuthStore } from '@/stores/auth'
+import router from '@/router'
 
 const request = axios.create({
    baseURL: 'https://nodejs-production-acc0.up.railway.app',
@@ -6,9 +8,9 @@ const request = axios.create({
 })
 
 request.interceptors.request.use(config => {
-  const token = localStorage.getItem('token')
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+  const authStore = userAuthStore()
+  if (authStore.token) {
+    config.headers.Authorization = `Bearer ${authStore.token}`
   }
   return config
 })
@@ -20,7 +22,13 @@ request.interceptors.response.use(response => {
   }
   return Promise.reject(new Error(data.message))
 }, error => {
+  if (error.response?.status === 401) {
+    const authStore = userAuthStore()
+    authStore.clearToken()
+    router.push('/auth/login')
+  }
   return Promise.reject(error)
 })
+  
 
 export default request

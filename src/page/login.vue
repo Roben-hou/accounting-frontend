@@ -13,16 +13,17 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { login } from "@/api";
+import { userAuthStore } from "@/stores/auth";
 
 const router = useRouter();
 const form = ref({
   username: "",
   password: "",
 });
-
+const authStore = userAuthStore();
 const handleLogin = async () => {
   const res = await login(form.value);
-  localStorage.setItem("token", res.token);
+  authStore.setToken(res.token);
   router.push("/records");
 };
 </script>

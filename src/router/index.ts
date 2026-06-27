@@ -3,6 +3,7 @@ import MainLayout from '@/layouts/MainLayout.vue'
 import Records from '@/page/Records.vue'  
 import Login from '@/page/login.vue'
 import Register from '@/page/register.vue'
+import { userAuthStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -21,9 +22,9 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem('token')
+  const authStore = userAuthStore()
   const isAuthPage = to.path.startsWith('/auth/')
-  if (!token && !isAuthPage) {
+  if (!authStore.isLogin && !isAuthPage) {
     next('/auth/login')
   } else {
     next()
