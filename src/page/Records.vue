@@ -9,14 +9,10 @@
           <v-text-field v-model="form.amount" label="金额" type="number"></v-text-field>
         </v-col>
         <v-col cols="3">
-          <v-select
-            v-model="form.type"
-            :items="[
-              { title: '收入', value: 'income' },
-              { title: '支出', value: 'expense' },
-            ]"
-            label="类型"
-          ></v-select>
+          <v-select v-model="form.type" :items="[
+            { title: '收入', value: 'income' },
+            { title: '支出', value: 'expense' },
+          ]" label="类型"></v-select>
         </v-col>
         <v-col cols="2">
           <v-text-field v-model="form.category" label="分类"></v-text-field>
@@ -83,6 +79,12 @@ const stats = ref<stat>({ income: 0, expense: 0 });
 
 const handleSubmit = async () => {
   await createRecord(form.value);
+  form.value = {
+    title: "",
+    amount: 0,
+    type: "income",
+    category: "",
+  };
   records.value = await getRecords();
   stats.value = await getStats();
 };
@@ -102,6 +104,7 @@ $primary: #1976d2;
 
 .stats-card {
   border-radius: 12px;
+
   &:hover {
     opacity: 0.9;
   }
