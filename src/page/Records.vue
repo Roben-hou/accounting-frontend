@@ -76,17 +76,28 @@ const headers = [
 ];
 
 const stats = ref<stat>({ income: 0, expense: 0 });
-
+const isSubmiting = ref<boolean>(false);
 const handleSubmit = async () => {
-  await createRecord(form.value);
-  form.value = {
-    title: "",
-    amount: 0,
-    type: "income",
-    category: "",
-  };
-  records.value = await getRecords();
-  stats.value = await getStats();
+  if (isSubmiting.value) return
+  isSubmiting.value = true
+  try {
+    await createRecord(form.value);
+    form.value = {
+      title: "",
+      amount: 0,
+      type: "income",
+      category: "",
+    };
+    records.value = await getRecords();
+    stats.value = await getStats();
+  }
+  catch (e) {
+    console.log(e)
+  }
+  finally {
+    isSubmiting.value = false;
+  }
+
 };
 const handleDelete = async (id: number) => {
   await deleteRecord(id);
