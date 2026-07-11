@@ -19,3 +19,7 @@ export function login(data: {username:string,password:string}):Promise<{token:st
 export function register(data: {username:string,password:string}):Promise<{token:string}> {
   return request.post('/auth/register', data)
 }
+export function updateRecord(id: number, data: Partial<Omit<Record,'id'>>) {
+  return request.put(`/records/${id}`, data)
+}
+

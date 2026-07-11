@@ -6,7 +6,7 @@
       <v-btn color="primary" block @click="handleLogin" :loading="isSubmiting" :disabled="isSubmiting">登录</v-btn>
       <v-btn variant="text" block @click="router.push('/auth/register')">没有账号？去注册</v-btn>
     </v-card-text>
-    <v-snackbar v-model="showError" color="error" timeout="3000">{{ errorMessage }}</v-snackbar>
+    <v-snackbar v-model="showError" color="error" timeout="3000" location="top">{{ errorMessage }}</v-snackbar>
   </v-card>
 </template>
 

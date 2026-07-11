@@ -1,29 +1,12 @@
 <template>
-  <v-card class="mb-4">
-    <v-card-text>
-      <v-row>
-        <v-col cols="3">
-          <v-text-field v-model="form.title" label="标题"></v-text-field>
-        </v-col>
-        <v-col cols="3">
-          <v-text-field v-model="form.amount" label="金额" type="number"></v-text-field>
-        </v-col>
-        <v-col cols="3">
-          <v-select v-model="form.type" :items="[
-            { title: '收入', value: 'income' },
-            { title: '支出', value: 'expense' },
-          ]" label="类型"></v-select>
-        </v-col>
-        <v-col cols="2">
-          <v-text-field v-model="form.category" label="分类"></v-text-field>
-        </v-col>
-        <v-col cols="1" align-self="center">
-          <v-btn color="primary" @click="handleSubmit">提交</v-btn>
-        </v-col>
-      </v-row>
-    </v-card-text>
-  </v-card>
   <v-data-table :headers="headers" :items="records">
+    <template v-slot:top>
+      <v-toolbar flat>
+        <v-toolbar-title>记账记录</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-icon icon="mdi-plus" size="small" @click="openEditDialog(null)"></v-icon>
+      </v-toolbar>
+    </template>
     <template v-slot:item.type="{ value }">
       <v-chip :color="value === 'income' ? 'green' : 'red'" size="small">
         {{ value === "income" ? "收入" : "支出" }}
@@ -34,6 +17,8 @@
     </template>
     <template v-slot:item.actions="{ item }">
       <v-icon icon="mdi-delete" size="small" @click="handleDelete(item.id)"></v-icon>
+      <v-icon icon="mdi-pencil" size="small" class="mr-2" @click="openEditDialog(item)"
+        :style="{ marginLeft: '8px' }"></v-icon>
     </template>
   </v-data-table>
   <v-row class="mb-4">
@@ -48,24 +33,24 @@
       </v-card>
     </v-col>
   </v-row>
+  <!-- 表单弹窗 -->
+  <RecordFormDialog v-model="showDialog" :editing-record="editingRecord" @saved="handleSaved"></RecordFormDialog>
 </template>
 
 <script setup lang="ts">
 import dayjs from "dayjs";
 import { ref, onMounted } from "vue";
 import type { Record, stat } from "@/types";
-import { getRecords, createRecord, deleteRecord, getStats } from "@/api";
+import { getRecords, deleteRecord, getStats } from "@/api";
+import RecordFormDialog from "@/components/RecordFormDialog.vue";
 
 const records = ref<Record[]>([]);
-const form = ref<Omit<Record, "id" | "created_at">>({
-  title: "",
-  amount: 0,
-  type: "income" as "income" | "expense",
-  category: "",
-});
-const formatDate = (dateStr: string) => {
-  return dayjs(dateStr).format("YYYY-MM-DD-HH");
-};
+const stats = ref<stat>({ income: 0, expense: 0 });
+const showDialog = ref(false);
+const editingRecord = ref<Record | null>(null);
+
+const formatDate = (dateStr: string) => dayjs(dateStr).format("YYYY-MM-DD-HH");
+
 const headers = [
   { title: "标题", key: "title" },
   { title: "金额", key: "amount" },
@@ -75,32 +60,22 @@ const headers = [
   { title: "操作", key: "actions", sortable: false },
 ];
 
-const stats = ref<stat>({ income: 0, expense: 0 });
-const isSubmiting = ref<boolean>(false);
-const handleSubmit = async () => {
-  if (isSubmiting.value) return
-  isSubmiting.value = true
+const openEditDialog = (record: Record | null) => {
+  editingRecord.value = record;
+  showDialog.value = true;
+};
+
+const handleDelete = async (id: number) => {
   try {
-    await createRecord(form.value);
-    form.value = {
-      title: "",
-      amount: 0,
-      type: "income",
-      category: "",
-    };
+    await deleteRecord(id);
     records.value = await getRecords();
     stats.value = await getStats();
+  } catch (e) {
+    console.log(e);
   }
-  catch (e) {
-    console.log(e)
-  }
-  finally {
-    isSubmiting.value = false;
-  }
-
 };
-const handleDelete = async (id: number) => {
-  await deleteRecord(id);
+
+const handleSaved = async () => {
   records.value = await getRecords();
   stats.value = await getStats();
 };
