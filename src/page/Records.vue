@@ -4,7 +4,7 @@
       <v-toolbar flat>
         <v-toolbar-title>记账记录</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-icon icon="mdi-plus" size="small" @click="openEditDialog(null)"></v-icon>
+        <v-icon icon="mdi-plus" class="mr-8" @click="openEditDialog(null)"></v-icon>
       </v-toolbar>
     </template>
     <template v-slot:item.type="{ value }">
@@ -17,18 +17,23 @@
     </template>
     <template v-slot:item.actions="{ item }">
       <v-icon icon="mdi-delete" size="small" @click="handleDelete(item.id)"></v-icon>
-      <v-icon icon="mdi-pencil" size="small" class="mr-2" @click="openEditDialog(item)"
-        :style="{ marginLeft: '8px' }"></v-icon>
+      <v-icon
+        icon="mdi-pencil"
+        size="small"
+        class="mr-2"
+        @click="openEditDialog(item)"
+        :style="{ marginLeft: '8px' }"
+      ></v-icon>
     </template>
   </v-data-table>
   <v-row class="mb-4">
     <v-col cols="6">
-      <v-card color="green-darken-3">
+      <v-card class="income-card">
         <v-card-text> 总收入: {{ stats.income }} </v-card-text>
       </v-card>
     </v-col>
     <v-col cols="6">
-      <v-card color="red-darken-3">
+      <v-card class="expense-card">
         <v-card-text> 总支出: {{ stats.expense }} </v-card-text>
       </v-card>
     </v-col>
@@ -88,11 +93,19 @@ onMounted(async () => {
 <style scoped lang="scss">
 $primary: #1976d2;
 
-.stats-card {
+@mixin stats-card {
   border-radius: 12px;
-
+  font-weight: 700;
   &:hover {
     opacity: 0.9;
   }
+}
+.income-card {
+  @include stats-card;
+  background: #4caf50;
+}
+.expense-card {
+  @include stats-card;
+  background: #f44336;
 }
 </style>

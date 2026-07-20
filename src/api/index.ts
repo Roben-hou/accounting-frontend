@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import type { Record, stat } from "@/types";
+import type { Record, stat, Family, FamilyInvitation} from "@/types";
 
 export function getRecords():Promise<Record[]> {
   return request.get('/records')
@@ -22,4 +22,24 @@ export function register(data: {username:string,password:string}):Promise<{token
 export function updateRecord(id: number, data: Partial<Omit<Record,'id'>>) {
   return request.put(`/records/${id}`, data)
 }
-
+export function getMyFamilies():Promise<Family[]> {
+  return request.get('/family/my')
+}
+export function createFamily(data: {name:string}) {
+  return request.post('/family/create', data)
+}
+export function inviteToFamily(familyId: number, data: {username:string}) {
+  return request.post(`/family/invite/send/${familyId}`, data)
+}
+export function getMyInvitations():Promise<FamilyInvitation[]> {
+  return request.get('/family/invitations')
+}
+export function acceptFamilyInvitation(invitationId: number) {
+  return request.put(`/family/acceptInvite/${invitationId}`)
+}
+export function rejectFamilyInvitation(invitationId: number) {
+  return request.put(`/family/reject/${invitationId}`)
+}
+export function acceptJoinRequest(invitationId: number) {
+  return request.put(`/family/accept/${invitationId}`)
+}

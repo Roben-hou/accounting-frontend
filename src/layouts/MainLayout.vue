@@ -9,6 +9,7 @@
     <v-list>
       <v-list-item to="/" title="概览"></v-list-item>
       <v-list-item to="/records" title="记账记录"></v-list-item>
+      <v-list-item to="/family" title="家庭记账"></v-list-item>
     </v-list>
 
     <template v-slot:append>
@@ -30,14 +31,17 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 import logo from "@/assets/logo.svg?raw";
+import { userAuthStore } from '@/stores/auth'
 
 const router = useRouter();
-const username = "admin";
+const authStore = userAuthStore()
+const username = computed(() => authStore.username || '未登录')
 
 const handleLogout = () => {
-  localStorage.removeItem("token");
+  authStore.clearToken();
   router.push("/auth/login");
 };
 </script>

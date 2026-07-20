@@ -21,25 +21,23 @@ const form = ref({
   username: "",
   password: "",
 });
-const isSubmiting = ref<boolean>(false)
-const errorMessage = ref<string>("")
-const showError = ref<boolean>(false)
+const isSubmiting = ref<boolean>(false);
+const errorMessage = ref<string>("");
+const showError = ref<boolean>(false);
 const authStore = userAuthStore();
 
 const handleLogin = async () => {
   if (isSubmiting.value) return;
-  isSubmiting.value = true
-  errorMessage.value = ""
+  isSubmiting.value = true;
+  errorMessage.value = "";
   try {
     const res = await login(form.value);
     authStore.setToken(res.token);
     router.push("/records");
-  }
-  catch (e) {
+  } catch (e) {
     errorMessage.value = "登录失败";
-    showError.value = true
-  }
-  finally {
+    showError.value = true;
+  } finally {
     isSubmiting.value = false;
   }
 };
