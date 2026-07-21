@@ -77,7 +77,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { getMyInvitations, acceptFamilyInvitation, rejectFamilyInvitation, acceptJoinRequest } from "@/api";
-import type { FamilyInvitation, Family } from "@/types";
+import type { FamilyInvitation } from "@/types";
 import { useRouter } from "vue-router";
 
 const invitations = ref<FamilyInvitation[]>([]);

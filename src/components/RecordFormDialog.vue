@@ -26,6 +26,7 @@ import { createRecord, updateRecord } from "@/api";
 
 const props = defineProps<{
     editingRecord: Record | null;
+    familyId?: number;
 }>();
 const emit = defineEmits<{ saved: [] }>();
 const modelValue = defineModel<boolean>();
@@ -35,15 +36,16 @@ const form = ref<Omit<Record, "id" | "created_at">>({
     amount: 0,
     type: "income",
     category: "",
+    family_id: undefined,
 });
 
 watch(() => props.editingRecord, (newRecord) => {
     if (newRecord) {
         form.value = { ...newRecord };
     } else {
-        form.value = { title: "", amount: 0, type: "income", category: "" };
+        form.value = { title: "", amount: 0, type: "income", category: "", family_id: props.familyId };
     }
-});
+}, { immediate: true });
 
 const isSubmiting = ref(false);
 const handleChangeRecord = async () => {

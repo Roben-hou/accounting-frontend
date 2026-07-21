@@ -27,19 +27,27 @@
         </template>
         <template #append>
           <div class="d-flex align-center">
-            {{ invitation.status == "accepted" ? "已接受" : invitation.status == "rejected" ? "已拒绝" : "待处理" }}
+            <v-chip
+              :color="
+                invitation.status === 'accepted' ? 'success' : invitation.status === 'rejected' ? 'error' : 'default'
+              "
+              size="small"
+              class="font-weight-medium"
+            >
+              {{ invitation.status === "accepted" ? "已接受" : invitation.status === "rejected" ? "已拒绝" : "待处理" }}
+            </v-chip>
           </div>
         </template>
       </v-list-item>
     </v-list>
-    <div v-else>暂无待处理请求</div>
+    <div v-else class="text-grey text-subtitle-1 text-center py-4">暂无历史请求</div>
   </v-container>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
-import { getMyInvitations, acceptFamilyInvitation, rejectFamilyInvitation, acceptJoinRequest } from "@/api";
-import type { FamilyInvitation, Family } from "@/types";
+import { getMyInvitations } from "@/api";
+import type { FamilyInvitation } from "@/types";
 import { useRouter } from "vue-router";
 
 const invitations = ref<FamilyInvitation[]>([]);
@@ -50,18 +58,7 @@ const historyInvitations = computed(() => invitations.value.filter((item) => ite
 const fetchInvitations = async () => {
   invitations.value = await getMyInvitations();
 };
-const handleAccept = async (invitation: FamilyInvitation) => {
-  await acceptFamilyInvitation(invitation.id);
-  await fetchInvitations();
-};
-const handleAcceptApply = async (invitation: FamilyInvitation) => {
-  await acceptJoinRequest(invitation.id);
-  await fetchInvitations();
-};
-const handleReject = async (invitation: FamilyInvitation) => {
-  await rejectFamilyInvitation(invitation.id);
-  await fetchInvitations();
-};
+
 onMounted(async () => {
   await fetchInvitations();
 });

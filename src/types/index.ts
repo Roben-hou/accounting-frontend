@@ -1,10 +1,12 @@
 export interface Record {
+  username?: string
   id: number
   title: string
   amount: number
   type: 'income' | 'expense'
   category: string
   created_at: string
+  family_id?: number
 }
 
 export interface ApiResponse<T> {

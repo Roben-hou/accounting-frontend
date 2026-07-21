@@ -1,8 +1,8 @@
 import request from "@/utils/request";
 import type { Record, stat, Family, FamilyInvitation} from "@/types";
 
-export function getRecords():Promise<Record[]> {
-  return request.get('/records')
+export function getRecords(params?: { familyId?: number }):Promise<Record[]> {
+  return request.get('/records', { params })
 }
 export function createRecord(data: Omit<Record,'id' | 'created_at'>) {
   return request.post('/records/create', data)
