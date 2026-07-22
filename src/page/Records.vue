@@ -54,7 +54,7 @@ const stats = ref<stat>({ income: 0, expense: 0 });
 const showDialog = ref(false);
 const editingRecord = ref<Record | null>(null);
 
-const formatDate = (dateStr: string) => dayjs(dateStr).format("YYYY-MM-DD-HH");
+const formatDate = (dateStr: string) => dayjs(dateStr).format("YYYY-MM-DD");
 
 const headers = [
   { title: "标题", key: "title" },
